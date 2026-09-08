@@ -101,9 +101,9 @@ var RITEDB = {"5000001":{"n":"治理家业","c":4,"lo":"自宅:1","s":[{"t":"你
             ⚠️ 每次大改动前先【🗂️ 导出备份】。点击卡牌 / 事件标题可展开就地编辑。
             <br>📖 已内置官方词库（<span id="tipDbStat">卡牌 / 事件 / 仪式 / 标签</span>）：自动显示正确名字，可按名字搜索、分类、排序、加标签，并在【🔍图鉴查询】里按名字添加任意卡牌。
             <br>🎁 命运商城加点在【🎁命运商城】页单独载入 <code>global.json</code>，与普通存档互不影响。
-            <br>📱 <b>手机版说明</b>：手机版游戏<b>没有更新联动内容</b>，所以联动物品加进去也不会生效，只是词库里有对应内容。
-            <br>↕️ 右下角蓝色 <b>⇕</b> 按钮可展开<b>快速翻页滑轨</b>：拖动定位、直接跳到最后一张（新加的卡都在最底下），只不过首末按钮无法使用……。
-            <br>🕯️ 【⚖️事件/🕯️仪式】页可<b>按名称添加仪式</b>，会照官方配置自动补齐卡位槽并写明每个槽的提示。
+            <br>📱 <b>手机版说明</b>：手机版游戏<b>没有更新联动内容</b>，所以联动物品加进去也不会生效，别白费功夫。
+            <br>↕️ 右下角蓝色 <b>⇕</b> 按钮可展开<b>快速翻页滑轨</b>：拖动定位、一键置顶/置底、直接跳到最后一张（新加的卡都在最底下）。
+            <br>🕯️ 【⚖️事件/🕯️仪式】页可<b>按名称添加仪式</b>，会照官方配置自动补齐卡位槽并写明每个槽该放什么，不用进游戏反复试错。
         </div>
 
         <!-- 结构识别提示条 -->
@@ -227,7 +227,7 @@ var RITEDB = {"5000001":{"n":"治理家业","c":4,"lo":"自宅:1","s":[{"t":"你
                         🕯️ 按名称添加仪式 <span id="ritePickCount" class="text-gray-500 font-normal"></span>
                     </div>
                     <div class="text-xs text-gray-400 mb-1">
-                        游戏里运行的“事件”是<b class="text-teal-300">仪式</b>。这里搜到后点【加入存档】，
+                        游戏里真正在跑的是<b class="text-teal-300">仪式</b>。这里搜到后点【加入存档】，
                         会按官方配置<b class="text-teal-300">自动补齐卡位槽数量</b>并列出每个槽该放什么，不用进游戏反复试错。
                     </div>
                     <input id="ritePickSearch" type="text" placeholder="🔍仪式名 / 地点 / ID，如 治理家业、自宅、5000001"
@@ -425,7 +425,7 @@ var RITEDB = {"5000001":{"n":"治理家业","c":4,"lo":"自宅:1","s":[{"t":"你
 
         <!-- 页脚：GPL-3.0 声明（GPL 要求「适当的法律声明」对用户可见） -->
         <footer class="mt-6 pt-4 border-t border-slate-700 text-xs text-gray-500 text-center">
-            <div>苏游修改器 · 柳漪春涛正式版 v3　—　Copyright &copy; 2026 柳漪春涛</div>
+            <div>苏游修改器 · 柳漪春涛正式版 v2　—　Copyright &copy; 2026 柳漪春涛</div>
             <div class="mt-1">
                 本程序是<b class="text-gray-400">自由软件</b>，依 
                 <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener"
@@ -1467,7 +1467,7 @@ function equipsEditor(card, onChange){
     if(slots.length && eqs.length > slots.length){
         const warn = document.createElement("div");
         warn.className = "text-xs text-amber-400 mb-1";
-        warn.innerText = "提示：装备件数(" + eqs.length + ")超过装备位数量(" + slots.length + ")，但强制添加也许仍然可用，不排除会出bug的情况";
+        warn.innerText = "提示：装备件数(" + eqs.length + ")超过装备位数量(" + slots.length + ")，游戏内可能只显示前几件";
         box.appendChild(warn);
     }
 
@@ -1531,7 +1531,7 @@ function equipsEditor(card, onChange){
     const hint = document.createElement("div");
     hint.className = "text-xs text-gray-500 mt-1";
     hint.innerHTML = "默认可搜全部 " + Object.keys(GDB_CARDS).length
-        + " 张卡：任何卡牌都能直接放到人物身上，游戏内也能识别，只不过放上去就没法拆下来了。"
+        + " 张卡：任何卡牌都能直接放到人物身上，游戏内也能识别。"
         + "<br><span class='text-amber-400'>📱 手机版游戏没有更新联动内容，联动物品加了也不生效。</span>";
     pick.appendChild(hint);
 
@@ -3357,7 +3357,7 @@ $("addSudanBtn").onclick = ()=>{
     const id = num($("poolCardId").value) || 2010016;
     getPool().push(makeInitialPoolEntry(id));
     renderStructBar(); renderPool(); syncSource();
-    setMsg(`✅ 已添加苏丹卡（ID:${id}）。若游戏里显示“已折”也许是各种代码原因);
+    setMsg(`✅ 已添加苏丹卡（ID:${id}）。若游戏里仍显示“已折”，请把存档中苏丹卡池的一段结构贴给我，我按真实字段对接`);
 };
 $("clearPoolBtn").onclick = ()=>{
     if(!saveData || !poolPath){ setMsg("⚠️ 请先载入存档"); return; }
